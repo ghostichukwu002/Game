@@ -2,9 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
 
+const authAttempts = new Map();
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL && !/localhost|127\.0\.0\.1/.test(process.env.DATABASE_URL) ? { rejectUnauthorized: false } : undefined,
+  ssl: process.env.DATABASE_URL && !/localhost|127\.0\.0\.1/.test(process.env.DATABASE_URL) ? { rejectUnauthorized: true } : undefined,
   max: 5,
   idleTimeoutMillis: 10000,
   connectionTimeoutMillis: 8000
@@ -57,6 +58,8 @@ module.exports = async function handler(req,res){
  if(origin&&allowed.length)res.setHeader('Access-Control-Allow-Origin',origin);
  res.setHeader('Vary','Origin');res.setHeader('Access-Control-Allow-Headers','Authorization, Content-Type');res.setHeader('Access-Control-Allow-Methods','GET, POST, PATCH, OPTIONS');
  if(req.method==='OPTIONS'){res.statusCode=204;return res.end()}
+ const path=getPath(req), method=req.method;
+ if(method==='POST'&&(path==='/login'||path==='/register')){const ip=String(req.headers['x-forwarded-for']||req.socket?.remoteAddress||'unknown').split(',')[0].trim();const key=ip+'|'+path;const now=Date.now();const bucket=authAttempts.get(key);if(!bucket||now-bucket.start>15*60*1000){authAttempts.set(key,{start:now,count:1})}else if(bucket.count>=10){return send(res,429,{error:'Too many attempts. Please wait 15 minutes and try again.'})}else{bucket.count++}}
  if(!process.env.DATABASE_URL||!process.env.JWT_SECRET||process.env.JWT_SECRET.length<32){return send(res,503,{error:'API setup is incomplete. Configure DATABASE_URL and a JWT_SECRET of at least 32 characters.'})}
  try{
   await ensureSchema();
