@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
  id BIGSERIAL PRIMARY KEY, email TEXT NOT NULL UNIQUE, username VARCHAR(18) NOT NULL,
  password_hash TEXT NOT NULL, avatar TEXT NOT NULL DEFAULT '⚡',
  role TEXT NOT NULL DEFAULT 'player' CHECK(role IN ('player','admin')),
- badges TEXT[] NOT NULL DEFAULT '{}', xp BIGINT NOT NULL DEFAULT 0 CHECK(xp>=0),
+ badges TEXT[] NOT NULL DEFAULT '{}', achievements JSONB NOT NULL DEFAULT '[]'::jsonb, xp BIGINT NOT NULL DEFAULT 0 CHECK(xp>=0),
  games_played INTEGER NOT NULL DEFAULT 0 CHECK(games_played>=0), best_score INTEGER NOT NULL DEFAULT 0 CHECK(best_score>=0),
  best_reaction INTEGER CHECK(best_reaction IS NULL OR best_reaction>0), streak INTEGER NOT NULL DEFAULT 0 CHECK(streak>=0),
  last_played DATE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS game_scores (
  mode TEXT NOT NULL CHECK(mode IN ('trivia','number','reflex')), points INTEGER NOT NULL CHECK(points>=0 AND points<=10000),
  details JSONB NOT NULL DEFAULT '{}'::jsonb, played_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE users ADD COLUMN IF NOT EXISTS achievements JSONB NOT NULL DEFAULT '[]'::jsonb;
 CREATE INDEX IF NOT EXISTS game_scores_leaderboard_idx ON game_scores(points DESC, played_at DESC);
 CREATE INDEX IF NOT EXISTS game_scores_user_idx ON game_scores(user_id, played_at DESC);
 CREATE TABLE IF NOT EXISTS badge_requests (
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 let schemaReady;
 function ensureSchema(){ if(!schemaReady) schemaReady=pool.query(schemaSql); return schemaReady; }
 const today = () => new Date().toISOString().slice(0,10);
-const safeUser = u => ({id:u.id,email:u.email,username:u.username,avatar:u.avatar,role:u.role,badges:u.badges||[],xp:Number(u.xp||0),games:Number(u.games_played||0),best:Number(u.best_score||0),bestReaction:u.best_reaction?Number(u.best_reaction):0,streak:Number(u.streak||0)});
+const safeUser = u => ({id:u.id,email:u.email,username:u.username,avatar:u.avatar,role:u.role,badges:u.badges||[],achievements:Array.isArray(u.achievements)?u.achievements:[],xp:Number(u.xp||0),games:Number(u.games_played||0),best:Number(u.best_score||0),bestReaction:u.best_reaction?Number(u.best_reaction):0,streak:Number(u.streak||0)});
 function send(res,status,data){res.statusCode=status;res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(JSON.stringify(data));}
 function getPath(req){const u=new URL(req.url,'https://nexplay.invalid');return ('/'+(u.searchParams.get('path')||u.pathname.replace(/^\/api\/?/,''))).replace(/\/{2,}/g,'/').replace(/\/$/,'')||'/'}
 async function body(req){if(req.body&&typeof req.body==='object')return req.body;let raw='';for await(const chunk of req) {raw+=chunk;if(raw.length>20000)throw Object.assign(new Error('Request body too large'),{status:413})}try{return raw?JSON.parse(raw):{}}catch{throw Object.assign(new Error('Send valid JSON.'),{status:400})}}
@@ -73,7 +74,7 @@ module.exports = async function handler(req,res){
    if(username.length<2||username.length>18||/[<>]/.test(username))return send(res,400,{error:'Player name must be 2–18 characters.'});
    if(password.length<10||password.length>128)return send(res,400,{error:'Use a password between 10 and 128 characters.'});
    const isAdminEmail=(process.env.ADMIN_EMAIL||'').trim().toLowerCase()===email;
-   if(isAdminEmail){const expected=String(process.env.ADMIN_SETUP_TOKEN||''),provided=String(data.adminSetupToken||'');if(expected.length<24||provided.length!==expected.length||!crypto.timingSafeEqual(Buffer.from(provided),Buffer.from(expected)))return send(res,403,{error:'The site-owner setup code is required for this email.'})}
+   if(isAdminEmail){const expected=String(process.env.ADMIN_SETUP_TOKEN||''),provided=String(data.adminSetupToken||'');const a=Buffer.from(provided),b=Buffer.from(expected);if(expected.length<24||a.length!==b.length||!crypto.timingSafeEqual(a,b))return send(res,403,{error:'The site-owner setup code is required for this email.'})}
    const hash=await bcrypt.hash(password,12), role=isAdminEmail?'admin':'player';
    const q=await pool.query('INSERT INTO users(email,username,password_hash,role) VALUES($1,$2,$3,$4) RETURNING *',[email,username,hash,role]);
    await log(q.rows[0].id,'account.registered',q.rows[0].id,{role});
@@ -96,14 +97,14 @@ module.exports = async function handler(req,res){
   if(path==='/scores'&&method==='POST'){
    const u=await auth(req),mode=String(data.mode||''),points=Number(data.points),details=data.details&&typeof data.details==='object'?data.details:{};
    const maxPoints={trivia:106,number:1500,reflex:600}[mode];if(!maxPoints||!Number.isInteger(points)||points<0||points>maxPoints)return send(res,400,{error:'Invalid game score for this mode.'});
-   const allowedDetails={};for(const k of ['correct','solved','avg','best']){const v=Number(details[k]);if(Number.isFinite(v)&&v>=0&&v<=100000)allowedDetails[k]=v}
+   const allowedDetails={};for(const k of ['correct','solved','avg','best']){const v=Number(details[k]);if(Number.isFinite(v)&&v>=0&&v<=100000)allowedDetails[k]=v}const allowedAchievementIds=['first-run','brainiac','xp-100','speed-demon','streak-3'];const achievements=[...new Set([...(Array.isArray(u.achievements)?u.achievements:[]),...(Array.isArray(data.achievements)?data.achievements.filter(x=>allowedAchievementIds.includes(x)):[])])];
    const q=await pool.query('INSERT INTO game_scores(user_id,mode,points,details) VALUES($1,$2,$3,$4) RETURNING id,played_at',[u.id,mode,points,JSON.stringify(allowedDetails)]);
    const todayDate=today();
    const uq=await pool.query(`UPDATE users SET xp=xp+$1,games_played=games_played+1,best_score=GREATEST(best_score,$1),
     best_reaction=CASE WHEN $2::int>0 THEN LEAST(COALESCE(best_reaction,$2::int),$2::int) ELSE best_reaction END,
     streak=CASE WHEN last_played=$3::date THEN streak WHEN last_played=$3::date-1 THEN streak+1 ELSE 1 END,
-    last_played=$3::date,updated_at=NOW() WHERE id=$4 RETURNING *`,
-    [points,mode==='reflex'&&allowedDetails.best?allowedDetails.best:0,todayDate,u.id]);
+    last_played=$3::date,achievements=$5::jsonb,updated_at=NOW() WHERE id=$4 RETURNING *`,
+    [points,mode==='reflex'&&allowedDetails.best?allowedDetails.best:0,todayDate,u.id,JSON.stringify(achievements)]);
    return send(res,201,{score:q.rows[0],user:safeUser(uq.rows[0])});
   }
   if(path==='/leaderboard'&&method==='GET'){
@@ -151,5 +152,5 @@ module.exports = async function handler(req,res){
    await admin(req);const q=await pool.query('SELECT a.id,a.action,a.metadata,a.created_at,u.username actor,t.username target FROM audit_logs a LEFT JOIN users u ON u.id=a.actor_id LEFT JOIN users t ON t.id=a.target_user_id ORDER BY a.created_at DESC LIMIT 100');return send(res,200,{events:q.rows});
   }
   return send(res,404,{error:'API route not found.'});
- }catch(e){console.error('NEXPLAY API error:',e.message);return send(res,e.status||500,{error:e.status?e.message:'Something went wrong. Please try again.'})}
+ }catch(e){console.error('NEXPLAY API error:',e.message);const status=e.status||(e.code==='23505'?409:500);const message=e.status?e.message:e.code==='23505'?'An account with this email already exists.':'Something went wrong. Please try again.';return send(res,status,{error:message})}
 };
