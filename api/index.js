@@ -1,3 +1,4 @@
+const crypto = require('node:crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
@@ -71,7 +72,9 @@ module.exports = async function handler(req,res){
    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254)return send(res,400,{error:'Enter a valid email address.'});
    if(username.length<2||username.length>18||/[<>]/.test(username))return send(res,400,{error:'Player name must be 2–18 characters.'});
    if(password.length<10||password.length>128)return send(res,400,{error:'Use a password between 10 and 128 characters.'});
-   const hash=await bcrypt.hash(password,12), role=(process.env.ADMIN_EMAIL||'').trim().toLowerCase()===email?'admin':'player';
+   const isAdminEmail=(process.env.ADMIN_EMAIL||'').trim().toLowerCase()===email;
+   if(isAdminEmail){const expected=String(process.env.ADMIN_SETUP_TOKEN||''),provided=String(data.adminSetupToken||'');if(expected.length<24||provided.length!==expected.length||!crypto.timingSafeEqual(Buffer.from(provided),Buffer.from(expected)))return send(res,403,{error:'The site-owner setup code is required for this email.'})}
+   const hash=await bcrypt.hash(password,12), role=isAdminEmail?'admin':'player';
    const q=await pool.query('INSERT INTO users(email,username,password_hash,role) VALUES($1,$2,$3,$4) RETURNING *',[email,username,hash,role]);
    await log(q.rows[0].id,'account.registered',q.rows[0].id,{role});
    return send(res,201,{token:tokenFor(q.rows[0]),user:safeUser(q.rows[0])});
@@ -92,7 +95,7 @@ module.exports = async function handler(req,res){
   }
   if(path==='/scores'&&method==='POST'){
    const u=await auth(req),mode=String(data.mode||''),points=Number(data.points),details=data.details&&typeof data.details==='object'?data.details:{};
-   if(!['trivia','number','reflex'].includes(mode)||!Number.isInteger(points)||points<0||points>10000)return send(res,400,{error:'Invalid game score.'});
+   const maxPoints={trivia:106,number:1500,reflex:600}[mode];if(!maxPoints||!Number.isInteger(points)||points<0||points>maxPoints)return send(res,400,{error:'Invalid game score for this mode.'});
    const allowedDetails={};for(const k of ['correct','solved','avg','best']){const v=Number(details[k]);if(Number.isFinite(v)&&v>=0&&v<=100000)allowedDetails[k]=v}
    const q=await pool.query('INSERT INTO game_scores(user_id,mode,points,details) VALUES($1,$2,$3,$4) RETURNING id,played_at',[u.id,mode,points,JSON.stringify(allowedDetails)]);
    const todayDate=today();
