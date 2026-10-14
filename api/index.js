@@ -1,4 +1,3 @@
-const crypto = require('node:crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
@@ -10,7 +9,7 @@ const pool = new Pool({
   idleTimeoutMillis: 10000,
   connectionTimeoutMillis: 8000
 });
-const schemaReady = pool.query(`
+const schemaSql = `
 CREATE TABLE IF NOT EXISTS users (
  id BIGSERIAL PRIMARY KEY, email TEXT NOT NULL UNIQUE, username VARCHAR(18) NOT NULL,
  password_hash TEXT NOT NULL, avatar TEXT NOT NULL DEFAULT '⚡',
@@ -39,7 +38,9 @@ CREATE TABLE IF NOT EXISTS audit_logs (
  target_user_id BIGINT REFERENCES users(id) ON DELETE SET NULL, metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-`);
+`;
+let schemaReady;
+function ensureSchema(){ if(!schemaReady) schemaReady=pool.query(schemaSql); return schemaReady; }
 const today = () => new Date().toISOString().slice(0,10);
 const safeUser = u => ({id:u.id,email:u.email,username:u.username,avatar:u.avatar,role:u.role,badges:u.badges||[],xp:Number(u.xp||0),games:Number(u.games_played||0),best:Number(u.best_score||0),bestReaction:u.best_reaction?Number(u.best_reaction):0,streak:Number(u.streak||0)});
 function send(res,status,data){res.statusCode=status;res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(JSON.stringify(data));}
@@ -58,7 +59,7 @@ module.exports = async function handler(req,res){
  if(req.method==='OPTIONS'){res.statusCode=204;return res.end()}
  if(!process.env.DATABASE_URL||!process.env.JWT_SECRET||process.env.JWT_SECRET.length<32){return send(res,503,{error:'API setup is incomplete. Configure DATABASE_URL and a JWT_SECRET of at least 32 characters.'})}
  try{
-  await schemaReady;
+  await ensureSchema();
   const path=getPath(req), method=req.method;
   if(path==='/health'&&method==='GET'){await pool.query('SELECT 1');return send(res,200,{ok:true,service:'NEXPLAY API',time:new Date().toISOString()})}
   const data=['POST','PATCH'].includes(method)?await body(req):{};
