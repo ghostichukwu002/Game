@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
   avatar TEXT NOT NULL DEFAULT '⚡',
   role TEXT NOT NULL DEFAULT 'player' CHECK (role IN ('player','admin')),
   badges TEXT[] NOT NULL DEFAULT '{}',
+  achievements JSONB NOT NULL DEFAULT '[]'::jsonb,
   xp BIGINT NOT NULL DEFAULT 0 CHECK (xp >= 0),
   games_played INTEGER NOT NULL DEFAULT 0 CHECK (games_played >= 0),
   best_score INTEGER NOT NULL DEFAULT 0 CHECK (best_score >= 0),
