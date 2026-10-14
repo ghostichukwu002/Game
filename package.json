@@ -1,0 +1,14 @@
+{
+  "name": "nexplay-game-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NEXPLAY game API for accounts, cloud saves, leaderboards and badge moderation",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1"
+  }
+}
