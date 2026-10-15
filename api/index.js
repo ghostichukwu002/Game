@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS game_scores (
 ALTER TABLE users ADD COLUMN IF NOT EXISTS achievements JSONB NOT NULL DEFAULT '[]'::jsonb;
 CREATE INDEX IF NOT EXISTS game_scores_leaderboard_idx ON game_scores(points DESC, played_at DESC);
 CREATE INDEX IF NOT EXISTS game_scores_user_idx ON game_scores(user_id, played_at DESC);
+ALTER TABLE game_scores ADD COLUMN IF NOT EXISTS run_id TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS game_scores_user_run_key ON game_scores(user_id, run_id) WHERE run_id IS NOT NULL;
 CREATE TABLE IF NOT EXISTS badge_requests (
  id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
  badge_type TEXT NOT NULL CHECK(badge_type IN ('verified','developer')), message VARCHAR(500) NOT NULL DEFAULT '',
@@ -43,7 +45,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 );
 `;
 let schemaReady;
-function ensureSchema(){ if(!schemaReady) schemaReady=pool.query(schemaSql); return schemaReady; }
+function ensureSchema(){ if(!schemaReady) schemaReady=pool.query(schemaSql).catch(e=>{schemaReady=null;throw e}); return schemaReady; }
 const today = () => new Date().toISOString().slice(0,10);
 const safeUser = u => ({id:u.id,email:u.email,username:u.username,avatar:u.avatar,role:u.role,badges:u.badges||[],achievements:Array.isArray(u.achievements)?u.achievements:[],xp:Number(u.xp||0),games:Number(u.games_played||0),best:Number(u.best_score||0),bestReaction:u.best_reaction?Number(u.best_reaction):0,streak:Number(u.streak||0)});
 function send(res,status,data){res.statusCode=status;res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(JSON.stringify(data));}
@@ -96,16 +98,25 @@ module.exports = async function handler(req,res){
   }
   if(path==='/scores'&&method==='POST'){
    const u=await auth(req),mode=String(data.mode||''),points=Number(data.points),details=data.details&&typeof data.details==='object'?data.details:{};
+   const runId=data.runId===undefined||data.runId===null?null:String(data.runId);
+   if(runId!==null&&!/^[A-Za-z0-9-]{8,64}$/.test(runId))return send(res,400,{error:'Invalid run id.'});
    const maxPoints={trivia:106,number:1500,reflex:600}[mode];if(!maxPoints||!Number.isInteger(points)||points<0||points>maxPoints)return send(res,400,{error:'Invalid game score for this mode.'});
    const allowedDetails={};for(const k of ['correct','solved','avg','best']){const v=Number(details[k]);if(Number.isFinite(v)&&v>=0&&v<=100000)allowedDetails[k]=v}const allowedAchievementIds=['first-run','brainiac','xp-100','speed-demon','streak-3'];const achievements=[...new Set([...(Array.isArray(u.achievements)?u.achievements:[]),...(Array.isArray(data.achievements)?data.achievements.filter(x=>allowedAchievementIds.includes(x)):[])])];
-   const q=await pool.query('INSERT INTO game_scores(user_id,mode,points,details) VALUES($1,$2,$3,$4) RETURNING id,played_at',[u.id,mode,points,JSON.stringify(allowedDetails)]);
    const todayDate=today();
-   const uq=await pool.query(`UPDATE users SET xp=xp+$1,games_played=games_played+1,best_score=GREATEST(best_score,$1),
+   const client=await pool.connect();
+   try{
+    await client.query('BEGIN');
+    // A repeated runId (double submit, retry after a dropped response, or an offline re-send) is recorded once and awards no extra XP.
+    const q=await client.query('INSERT INTO game_scores(user_id,mode,points,details,run_id) VALUES($1,$2,$3,$4,$5) ON CONFLICT (user_id,run_id) WHERE run_id IS NOT NULL DO NOTHING RETURNING id,played_at',[u.id,mode,points,JSON.stringify(allowedDetails),runId]);
+    if(!q.rowCount){await client.query('ROLLBACK');const current=await pool.query('SELECT * FROM users WHERE id=$1',[u.id]);return send(res,200,{duplicate:true,user:safeUser(current.rows[0])})}
+    const uq=await client.query(`UPDATE users SET xp=xp+$1,games_played=games_played+1,best_score=GREATEST(best_score,$1),
     best_reaction=CASE WHEN $2::int>0 THEN LEAST(COALESCE(best_reaction,$2::int),$2::int) ELSE best_reaction END,
     streak=CASE WHEN last_played=$3::date THEN streak WHEN last_played=$3::date-1 THEN streak+1 ELSE 1 END,
     last_played=$3::date,achievements=$5::jsonb,updated_at=NOW() WHERE id=$4 RETURNING *`,
     [points,mode==='reflex'&&allowedDetails.best?allowedDetails.best:0,todayDate,u.id,JSON.stringify(achievements)]);
-   return send(res,201,{score:q.rows[0],user:safeUser(uq.rows[0])});
+    await client.query('COMMIT');
+    return send(res,201,{score:q.rows[0],user:safeUser(uq.rows[0])});
+   }catch(e){await client.query('ROLLBACK').catch(()=>{});throw e}finally{client.release()}
   }
   if(path==='/leaderboard'&&method==='GET'){
    const q=await pool.query(`SELECT id,username,avatar,badges,xp,games_played,best_score FROM users ORDER BY xp DESC, best_score DESC, created_at ASC LIMIT 50`);
