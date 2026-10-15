@@ -33,6 +33,12 @@ The API creates its tables and indexes automatically on first use. `database/sch
 - `GET /api/admin/overview`, `GET /api/admin/badges`, `PATCH /api/admin/badges/:id`
 - `GET /api/admin/users`, `PATCH /api/admin/users/badges`, `GET /api/admin/audit`
 
+`POST /api/scores` accepts an optional `runId` (8–64 letters, numbers or hyphens, one per finished game). A repeated `runId` for the same account is recorded once and awards no extra XP, so retries, double submissions and offline re-sends are safe. Games played while offline are queued on the device and sent once the connection returns.
+
+Sessions are bearer tokens stored in the browser and expire after 7 days. When the server rejects a token, the page signs the player out and asks them to sign in again. Signing out clears the token on this device only; the server has no revocation endpoint yet, so a copied token stays valid until it expires.
+
+Progress made as a guest stays on the device. Signing in loads the account's saved stats; guest progress is not merged into the account.
+
 Scores are tied to authenticated accounts and recorded server-side. As with any browser game, the API cannot fully prevent a modified client from submitting fabricated scores; competitive anti-cheat requires server-authoritative gameplay validation.
 
 ## Local-only fallback

@@ -45,3 +45,5 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE game_scores ADD COLUMN IF NOT EXISTS run_id TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS game_scores_user_run_key ON game_scores(user_id, run_id) WHERE run_id IS NOT NULL;
