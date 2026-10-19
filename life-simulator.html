@@ -7,10 +7,59 @@
 <style>
 :root{color-scheme:dark;--bg:#070d1b;--panel:#0d192b;--panel2:#11233a;--line:#213852;--text:#eff7ff;--muted:#8da6c1;--blue:#28bfff;--cyan:#72edff;--green:#65e6b8;--red:#ff829b;--gold:#ffd477;--purple:#9e9aff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#103257 0,transparent 40%),var(--bg);color:var(--text);font:14px 'DM Sans',sans-serif;min-height:100vh}button{font:inherit;cursor:pointer;border:0;color:inherit}.wrap{max-width:1180px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}.brand{font:700 20px 'Space Grotesk';letter-spacing:1px}.brand span{color:var(--blue)}a{color:var(--cyan);text-decoration:none}.back{padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#0c192a}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--cyan);font-weight:700}.hero{display:flex;justify-content:space-between;gap:22px;align-items:end;margin-bottom:22px}.hero h1{font:700 clamp(30px,5vw,49px) 'Space Grotesk';letter-spacing:-1.8px;margin:8px 0}.hero p{max-width:600px;line-height:1.7;color:var(--muted);margin:0}.daybox{min-width:130px;padding:15px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#112a44,#0a1424)}.daybox small{color:var(--muted)}.daybox strong{display:block;font:700 24px 'Space Grotesk';margin-top:4px}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:20px 0}.stat,.panel{background:linear-gradient(145deg,#0f1e32,#0a1423);border:1px solid var(--line);border-radius:18px}.stat{padding:15px}.stat-head{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}.stat strong{display:block;font:700 23px 'Space Grotesk';margin:9px 0}.bar{height:6px;background:#20334a;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;width:50%;background:var(--blue);border-radius:10px;transition:width .3s}.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:16px}.panel{padding:20px;margin-bottom:16px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.section-head h2{font:700 18px 'Space Grotesk';margin:0}.section-head small{color:var(--muted)}.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.action{padding:15px;text-align:left;background:#10233a;border:1px solid #25435f;border-radius:15px;transition:.18s}.action:hover{transform:translateY(-2px);border-color:var(--blue);background:#122b46}.action:disabled{opacity:.35;cursor:not-allowed;transform:none}.action .emoji{font-size:23px}.action strong{display:block;margin:9px 0 4px;font-size:14px}.action small{color:var(--muted);line-height:1.45;display:block}.cost{display:inline-block;margin-top:9px;color:var(--gold);font-size:11px}.event{padding:17px;border-radius:15px;background:linear-gradient(120deg,#103052,#10223a);border:1px solid #27516e;line-height:1.65}.event strong{display:block;margin-bottom:6px;color:var(--cyan)}.event p{margin:0;color:#c4d5e7}.choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.choice,.secondary{background:#152c45;border:1px solid #2a4965;padding:10px 12px;border-radius:11px}.choice:hover,.secondary:hover{border-color:var(--cyan)}.primary{background:linear-gradient(100deg,#149ee8,#37d6f2);color:#031322;font-weight:700;padding:11px 15px;border-radius:11px}.primary:hover{filter:brightness(1.08)}.jobline{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #1e3045}.jobline:last-child{border:0}.jobline small{display:block;color:var(--muted);margin-top:4px}.jobline button{padding:9px 11px;border:1px solid var(--line);background:#10233a;border-radius:10px}.log{display:flex;flex-direction:column;gap:10px}.log-item{display:flex;gap:10px;color:#c0d1e4;line-height:1.5;font-size:12px}.log-item span{font-size:17px}.notice{padding:11px 13px;border-radius:12px;background:#0d2931;border:1px solid #20505a;color:#9bf1d9;font-size:12px;line-height:1.5;margin-bottom:14px}.foot{text-align:center;color:#617b98;font-size:11px;padding:12px 0 28px}.foot b{color:var(--blue)}.overlay{position:fixed;inset:0;background:#020711d9;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.overlay.show{display:flex}.modal{width:min(480px,100%);background:#0d1b2e;border:1px solid #2c4965;border-radius:20px;padding:22px}.modal h2{font:700 23px 'Space Grotesk';margin-top:0}.modal p{color:var(--muted);line-height:1.7}.modal-actions{display:flex;gap:8px;flex-wrap:wrap}.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:6px 9px;color:var(--muted);font-size:10px}
 @media(max-width:800px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.hero{align-items:start;flex-direction:column}.daybox{display:flex;justify-content:space-between;align-items:center;width:100%}.daybox strong{font-size:20px}.wrap{padding:16px}.panel{padding:16px}}@media(max-width:420px){.actions{grid-template-columns:1fr 1fr}.action{padding:12px}.stat{padding:12px}.stat strong{font-size:21px}.top{align-items:flex-start}}
+
+/* Lagos open-world layer */
+.world-panel{position:relative;margin:20px 0 24px;border:1px solid #244564;border-radius:22px;overflow:hidden;background:#07101e;box-shadow:0 24px 70px #0008}
+.world-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;background:linear-gradient(110deg,#10243a,#0b1527);border-bottom:1px solid #24415d}
+.world-kicker{font-size:10px;letter-spacing:.19em;font-weight:800;color:#62e4ff;text-transform:uppercase}
+.world-top h2{font-size:19px;margin:4px 0 0;letter-spacing:-.04em}
+.world-sub{font-size:11px;color:#9ab2ca;margin-top:4px}
+.world-status{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.world-chip{border:1px solid #31516b;background:#0b1a2b;color:#d7f7ff;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.world-stage{position:relative;background:#162b2d;min-height:300px}
+#lagosWorld{display:block;width:100%;height:clamp(320px,52vw,540px);touch-action:none}
+.world-hud{position:absolute;inset:12px 12px auto;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;gap:8px}
+.world-hudbox{background:#06101cdb;border:1px solid #41617b;border-radius:12px;padding:10px 12px;backdrop-filter:blur(10px);box-shadow:0 8px 24px #0003}
+.world-hudbox b{display:block;color:#fff;font-size:12px}
+.world-hudbox span{display:block;color:#a7c4d9;font-size:10px;margin-top:3px}
+.world-location{max-width:180px;text-align:right}
+.world-prompt{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:#07121eeb;border:1px solid #53ddff;border-radius:14px;padding:10px 15px;color:white;font-size:12px;font-weight:700;box-shadow:0 0 28px #00bfff26;white-space:nowrap;pointer-events:none}
+.world-prompt small{display:block;color:#8caec8;font-weight:500;font-size:10px;margin-top:3px;text-align:center}
+.world-prompt .keycap{display:inline-grid;place-items:center;border:1px solid #67e8ff;border-radius:5px;min-width:21px;height:21px;margin-right:5px;color:#67e8ff}
+.world-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;background:#091321;border-top:1px solid #203951}
+.world-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:#8fa8c1;font-size:11px}
+.key-pill{display:inline-block;padding:4px 7px;border:1px solid #2b4660;border-radius:6px;background:#112237;color:#dff8ff;font-weight:800}
+.world-buttons{display:flex;gap:8px;align-items:center}
+.world-button{border:1px solid #2b4a65;border-radius:10px;background:#11243a;color:#e8f8ff;font-weight:800;font-size:11px;padding:9px 12px;cursor:pointer}
+.world-button.primary{background:linear-gradient(110deg,#1a9dce,#5369f5);border-color:#43d7ff;color:#fff}
+.world-button:hover{filter:brightness(1.14)}
+.world-dpad{position:absolute;left:15px;bottom:15px;display:none;grid-template-columns:repeat(3,38px);grid-template-rows:repeat(2,36px);gap:4px}
+.world-dpad button{border:1px solid #ffffff55;background:#06101cbb;color:white;border-radius:9px;font-size:16px;backdrop-filter:blur(6px);touch-action:none}
+.world-dpad button[data-dir="up"]{grid-column:2;grid-row:1}
+.world-dpad button[data-dir="left"]{grid-column:1;grid-row:2}
+.world-dpad button[data-dir="down"]{grid-column:2;grid-row:2}
+.world-dpad button[data-dir="right"]{grid-column:3;grid-row:2}
+.world-message{display:none;position:absolute;top:74px;left:50%;transform:translateX(-50%);max-width:90%;background:#07111fea;border:1px solid #48dfff;border-radius:12px;color:#eafaff;padding:10px 14px;font-size:12px;text-align:center}
+.world-message.show{display:block}
+@media(max-width:640px){.world-top{align-items:flex-start;padding:12px}.world-top h2{font-size:16px}.world-status{max-width:130px}.world-chip{font-size:9px;padding:6px 8px}.world-bottom{align-items:flex-start}.world-controls{max-width:100%;line-height:1.8}.world-dpad{display:grid}.world-prompt{left:auto;right:12px;transform:none;bottom:16px;white-space:normal;max-width:52%;text-align:center}.world-hud{inset:8px 8px auto}.world-hudbox{padding:8px}.world-location{max-width:125px}}
+@media(prefers-reduced-motion:reduce){.world-button{transition:none}}
+
 </style></head>
 <body><main class="wrap">
 <header class="top"><a class="brand" href="index.html">NEX<span>PLAY</span> <span style="color:#8da6c1;font-size:11px;letter-spacing:0">/ LIFE SIM</span></a><a class="back" href="index.html">← All games</a></header>
 <section class="hero"><div><div class="eyebrow">YOUR STORY · YOUR CHOICES</div><h1>Life Simulator<span style="color:var(--blue)">.</span></h1><p>Start with a little cash and a big future. Work, learn, take care of yourself, make choices and build the life you want. Every action moves time forward.</p></div><div class="daybox"><div><small>YOUR TIMELINE</small><strong id="day">Day 1</strong></div><span class="pill" id="age">Age 18</span></div></section>
+
+<section class="world-panel" aria-label="Explore Lagos open world">
+  <div class="world-top"><div><div class="world-kicker">NEXPLAY WORLD ENGINE</div><h2>Live your Lagos story.</h2><div class="world-sub">Explore the mainland · meet people · earn your next move</div></div><div class="world-status"><span class="world-chip">📍 Lagos, Nigeria</span><span class="world-chip" id="worldClock">☀️ 08:00 AM</span></div></div>
+  <div class="world-stage"><canvas id="lagosWorld" aria-label="Playable Lagos city. Use arrow keys or WASD to move."></canvas>
+    <div class="world-hud"><div class="world-hudbox"><b id="worldWallet">₦120</b><span>YOUR POCKET</span></div><div class="world-hudbox world-location"><b id="worldPlace">Oshodi Mainland</b><span id="worldHint">Walk around and explore</span></div></div>
+    <div class="world-prompt" id="worldPrompt"><span class="keycap">E</span> Explore your surroundings<small>Walk near a place to interact</small></div>
+    <div class="world-message" id="worldMessage" role="status"></div>
+    <div class="world-dpad" aria-label="Movement controls"><button data-dir="up" aria-label="Move up">▲</button><button data-dir="left" aria-label="Move left">◀</button><button data-dir="down" aria-label="Move down">▼</button><button data-dir="right" aria-label="Move right">▶</button></div>
+  </div>
+  <div class="world-bottom"><div class="world-controls"><span>MOVE</span><span class="key-pill">W</span><span class="key-pill">A</span><span class="key-pill">S</span><span class="key-pill">D</span><span>or arrows</span><span>·</span><span class="key-pill">E</span><span>interact</span></div><div class="world-buttons"><button class="world-button" id="worldMapBtn">🗺️ Find a place</button><button class="world-button primary" id="worldInteract">Interact · E</button></div></div>
+</section>
+
 <div id="notice" class="notice">Welcome to your new life. Balance money, energy, health and happiness. You can save and return whenever you want.</div>
 <section class="stats" id="stats"></section>
 <div class="layout"><div>
@@ -70,4 +119,95 @@ $('reset').onclick=()=>show('Start a new life?','This will erase the current loc
 $('export').onclick=()=>{const blob=new Blob([JSON.stringify(s,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='nexplay-life-save.json';a.click();URL.revokeObjectURL(url)};
 render();save();
 })();
-</script></body></html>
+</script>
+
+<script>
+(function(){
+const canvas=document.getElementById('lagosWorld'); if(!canvas)return;
+const ctx=canvas.getContext('2d');
+const $=id=>document.getElementById(id);
+const world={w:1900,h:1350};
+const player={x:880,y:690,dir:0,walk:0};
+const keys=new Set(); let dpr=1, vw=900,vh=500, last=0, toastTimer, frame=0;
+const places=[
+ {name:'Your Room',type:'home',x:450,y:410,w:155,h:105,color:'#e9b66e',label:'YOUR ROOM',desc:'Rest and get your energy back',icon:'⌂'},
+ {name:'Mainland Jobs',type:'work',x:1100,y:365,w:180,h:125,color:'#3a92b9',label:'JOB CENTRE',desc:'Pick up a shift and earn cash',icon:'₦'},
+ {name:'Mama Titi Buka',type:'food',x:1350,y:720,w:155,h:105,color:'#db744e',label:'MAMA TITI BUKA',desc:'Get a hot plate of jollof',icon:'🍲'},
+ {name:'Computer Village',type:'study',x:580,y:875,w:195,h:120,color:'#8271cf',label:'COMPUTER VILLAGE',desc:'Learn a skill or find a freelance gig',icon:'⌘'},
+ {name:'City Mall',type:'shop',x:1490,y:300,w:180,h:130,color:'#49a98e',label:'CITY MALL',desc:'Shop for essentials',icon:'✦'},
+ {name:'Freedom Park',type:'fun',x:370,y:1110,w:170,h:105,color:'#5baf76',label:'FREEDOM PARK',desc:'Take a breather and enjoy the day',icon:'✿'},
+ {name:'Bus Stop',type:'bus',x:980,y:1020,w:140,h:78,color:'#e0b84e',label:'DANFO BUS STOP',desc:'Take in the city buzz',icon:'↗'}
+];
+function resize(){const r=canvas.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);vw=Math.max(1,r.width);vh=Math.max(1,r.height);canvas.width=Math.round(vw*dpr);canvas.height=Math.round(vh*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+window.addEventListener('resize',resize); resize();
+function poly(points,fill,stroke){ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}}
+function rounded(x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill()}
+function drawBuilding(b){
+ const x=b.x,y=b.y,w=b.w,h=b.h,depth=22;
+ ctx.fillStyle='#07111a55';ctx.beginPath();ctx.ellipse(x+w/2,y+h+depth+8,w*.66,16,0,0,Math.PI*2);ctx.fill();
+ poly([[x,y],[x+depth,y-depth],[x+w+depth,y-depth],[x+w,y]],'#d7e2df');
+ poly([[x+w,y],[x+w+depth,y-depth],[x+w+depth,y+h-depth],[x+w,y+h]],shade(b.color,-38));
+ rounded(x,y,w,h,4,b.color);
+ ctx.fillStyle='#f4e7c8';ctx.fillRect(x+10,y+12,w-20,10);
+ ctx.fillStyle='#183149';ctx.fillRect(x+13,y+34,w-26,Math.max(16,h-57));
+ for(let wx=x+22;wx<x+w-20;wx+=34){ctx.fillStyle='#9ee8f5';ctx.fillRect(wx,y+39,20,23);ctx.fillStyle='#35566b';ctx.fillRect(wx+8,y+39,3,23)}
+ ctx.fillStyle='#d4c5a3';ctx.fillRect(x+w/2-10,y+h-34,20,34);
+ ctx.fillStyle='#071523';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText(b.label,x+w/2,y+h+depth+19);
+ ctx.textAlign='left';
+}
+function shade(hex,amt){let c=hex.replace('#','');let n=parseInt(c,16);let r=Math.max(0,Math.min(255,(n>>16)+amt)),g=Math.max(0,Math.min(255,((n>>8)&255)+amt)),b=Math.max(0,Math.min(255,(n&255)+amt));return '#'+(1<<24|r<<16|g<<8|b).toString(16).slice(1)}
+function drawPalm(x,y,scale=1){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.strokeStyle='#74563a';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(-6,-35,1,-65);ctx.stroke();ctx.fillStyle='#298c65';for(let i=0;i<7;i++){ctx.save();ctx.rotate(i*Math.PI/3.5);ctx.beginPath();ctx.ellipse(0,-69,10,32,-.25,0,Math.PI*2);ctx.fill();ctx.restore()}ctx.restore()}
+function drawWorld(){
+ ctx.clearRect(0,0,vw,vh);
+ const camX=Math.max(0,Math.min(world.w-vw,player.x-vw/2)),camY=Math.max(0,Math.min(world.h-vh,player.y-vh/2));
+ ctx.save();ctx.translate(-camX,-camY);
+ ctx.fillStyle='#638e68';ctx.fillRect(0,0,world.w,world.h);
+ // tiled grass gives the world depth and texture
+ for(let y=0;y<world.h;y+=64)for(let x=0;x<world.w;x+=64){ctx.fillStyle=((x/64+y/64)%2===0)?'#6c9b70':'#65916b';ctx.fillRect(x,y,62,62);if((x*7+y*3)%11===0){ctx.fillStyle='#9dbb79';ctx.fillRect(x+18,y+18,2,2);ctx.fillRect(x+40,y+42,3,2)}}
+ // roads and sidewalks
+ ctx.fillStyle='#b7b5a0';ctx.fillRect(0,570,world.w,100);ctx.fillRect(800,0,110,world.h);ctx.fillRect(0,960,world.w,74);
+ ctx.fillStyle='#454d54';ctx.fillRect(0,584,world.w,72);ctx.fillRect(814,0,82,world.h);ctx.fillRect(0,974,world.w,46);
+ ctx.setLineDash([24,20]);ctx.strokeStyle='#e8dca0';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,620);ctx.lineTo(world.w,620);ctx.moveTo(855,0);ctx.lineTo(855,world.h);ctx.moveTo(0,997);ctx.lineTo(world.w,997);ctx.stroke();ctx.setLineDash([]);
+ // zebra crossing
+ ctx.fillStyle='#f0eee0';for(let i=0;i<7;i++){ctx.fillRect(780+i*13,550,8,35);ctx.fillRect(780+i*13,658,8,35)}
+ // side streets
+ ctx.fillStyle='#b7b5a0';ctx.fillRect(250,200,70,world.h-200);ctx.fillRect(1250,0,62,570);
+ ctx.fillStyle='#454d54';ctx.fillRect(260,200,50,world.h-200);ctx.fillRect(1256,0,50,570);
+ // fenced yards and tiny homes
+ for(let i=0;i<12;i++){const x=70+(i%4)*170,y=65+Math.floor(i/4)*150;ctx.fillStyle='#557b5b';ctx.fillRect(x,y,130,100);ctx.strokeStyle='#c5c7ad';ctx.lineWidth=3;ctx.strokeRect(x,y,130,100);if(!places.some(p=>Math.abs(p.x-x)<100&&Math.abs(p.y-y)<100)){ctx.fillStyle=['#bd6c58','#d7b76b','#b5c9d2','#d6a1aa'][i%4];ctx.fillRect(x+17,y+15,96,72);poly([[x+10,y+15],[x+65,y-8],[x+120,y+15]],'#6c4542');ctx.fillStyle='#28465b';ctx.fillRect(x+28,y+31,17,18);ctx.fillRect(x+82,y+31,17,18)}}
+ // road-side kiosks
+ for(let i=0;i<8;i++){const x=350+i*165,y=(i%2===0)?520:695;ctx.fillStyle='#3f3a34';ctx.fillRect(x,y,70,30);ctx.fillStyle=['#eea74e','#58b7c7','#e86e5d'][i%3];ctx.fillRect(x+4,y+4,62,18);ctx.fillStyle='#f7e6b9';ctx.fillRect(x+9,y+8,12,10);ctx.fillRect(x+29,y+8,12,10)}
+ // palm trees and street lamps
+ [[120,520],[220,740],[710,450],[1020,800],[1620,500],[1700,880],[630,1150],[1180,1120],[1750,180]].forEach((p,i)=>drawPalm(p[0],p[1],i%3===0?.85:1));
+ for(let x=70;x<world.w;x+=180){ctx.fillStyle='#d7d5c6';ctx.fillRect(x,550,4,36);ctx.fillStyle='#fff0ae';ctx.beginPath();ctx.arc(x+2,548,5,0,Math.PI*2);ctx.fill()}
+ // places/buildings
+ places.forEach(drawBuilding);
+ // danfo bus
+ ctx.save();ctx.translate(920,610);ctx.fillStyle='#111a21';ctx.fillRect(0,8,112,42);ctx.fillStyle='#f3c83f';ctx.fillRect(0,0,108,36);ctx.fillStyle='#9dd6e5';for(let i=0;i<4;i++)ctx.fillRect(9+i*23,5,18,12);ctx.fillStyle='#202b31';ctx.fillRect(82,20,18,13);ctx.fillStyle='#151b20';ctx.beginPath();ctx.arc(23,40,10,0,Math.PI*2);ctx.arc(83,40,10,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.font='bold 9px sans-serif';ctx.fillText('LAGOS',32,30);ctx.restore();
+ // walking NPCs
+ for(let i=0;i<8;i++){const nx=350+i*175+Math.sin(frame*.015+i)*12,ny=630+Math.cos(frame*.012+i)*8;drawPerson(nx,ny,['#e9b9a2','#d4b98d','#a9d8e2'][i%3],false)}
+ // player
+ drawPerson(player.x,player.y,'#31d7ff',true);
+ // daylight cycle tint
+ const t=(window.__nexLifeTime||8);if(t>=18||t<6){ctx.fillStyle='rgba(9,20,58,.42)';ctx.fillRect(camX,camY,vw,vh);ctx.fillStyle='#ffeaa0';for(let i=0;i<32;i++){const sx=(i*137+30)%vw,sy=(i*71+20)%vh;ctx.fillRect(camX+sx,camY+sy,2,2)}}else if(t>=16){ctx.fillStyle='rgba(255,140,55,.11)';ctx.fillRect(camX,camY,vw,vh)}
+ ctx.restore();
+ // subtle vignette
+ const g=ctx.createRadialGradient(vw/2,vh/2,vh*.15,vw/2,vh/2,vw*.72);g.addColorStop(0,'#0000');g.addColorStop(1,'#07101b55');ctx.fillStyle=g;ctx.fillRect(0,0,vw,vh);
+}
+function drawPerson(x,y,color,isPlayer){ctx.save();ctx.translate(x,y+Math.sin(frame*.16+(isPlayer?0:2))*2);ctx.fillStyle='#0c1a2080';ctx.beginPath();ctx.ellipse(0,3,14,6,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#263746';ctx.fillRect(-8,-12,6,17);ctx.fillRect(2,-12,6,17);ctx.fillStyle=isPlayer?'#d3f7ff':'#e6c3a4';ctx.beginPath();ctx.arc(0,-26,9,0,Math.PI*2);ctx.fill();ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(-11,-19,22,23,6);ctx.fill();ctx.fillStyle='#27313a';ctx.beginPath();ctx.arc(0,-28,9,Math.PI,Math.PI*2);ctx.fill();if(isPlayer){ctx.strokeStyle='#66e8ff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-13,18,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#eafcff';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText('YOU',0,-43)}ctx.restore()}
+function nearPlace(){let best=null,dist=Infinity;for(const p of places){const d=Math.hypot(player.x-(p.x+p.w/2),player.y-(p.y+p.h/2));if(d<dist){best=p;dist=d}}return dist<Math.max(best.w,best.h)*.75+35?best:null}
+function syncHud(){const p=nearPlace();$('worldWallet').textContent='₦'+Math.round(window.__nexLifeMoney||120).toLocaleString('en-NG');$('worldPlace').textContent=p?p.name:'Oshodi Mainland';$('worldHint').textContent=p?p.desc:'Explore the streets of Lagos';$('worldPrompt').innerHTML=p?'<span class="keycap">E</span> '+p.name+'<small>'+p.desc+'</small>':'<span class="keycap">E</span> Explore your surroundings<small>Walk near a place to interact</small>';$('worldInteract').textContent=p?'Interact · E':'Explore · E';const t=window.__nexLifeTime||8;$('worldClock').textContent=(t>=18||t<6?'🌙':t>=16?'🌇':'☀️')+' '+String(t).padStart(2,'0')+':00';}
+function message(t){const el=$('worldMessage');el.textContent=t;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2600)}
+function interact(){const p=nearPlace();if(!p){message('Walk closer to a building or landmark to interact.');return}const actions={home:()=>window.nexLifeAction&&window.nexLifeAction('rest'),work:()=>window.nexLifeAction&&window.nexLifeAction('work'),food:()=>window.nexLifeAction&&window.nexLifeAction('eat'),study:()=>window.nexLifeAction&&window.nexLifeAction('study'),shop:()=>window.nexLifeAction&&window.nexLifeAction('shop'),fun:()=>window.nexLifeAction&&window.nexLifeAction('fun'),bus:()=>message('The danfo conductor shouts: “Oshodi! Oshodi! Enter with your change!”')};if(actions[p.type]){actions[p.type]();if(p.type==='bus')return;message('You visited '+p.name+'. Your Lagos story keeps moving.')} }
+function nearest(){const p=nearPlace();if(p){player.x=p.x+p.w/2;player.y=p.y+p.h/2+Math.max(p.h,70)*.72;message('You found '+p.name+'. Press E to interact.')}else{player.x=880;player.y=690;message('Back to Oshodi Mainland.');}}
+function loop(ts){const dt=Math.min(32,ts-last||16);last=ts;frame++;let dx=0,dy=0;if(keys.has('arrowleft')||keys.has('a'))dx--;if(keys.has('arrowright')||keys.has('d'))dx++;if(keys.has('arrowup')||keys.has('w'))dy--;if(keys.has('arrowdown')||keys.has('s'))dy++;if(dx||dy){const l=Math.hypot(dx,dy);player.x=Math.max(24,Math.min(world.w-24,player.x+dx/l*dt*.19));player.y=Math.max(24,Math.min(world.h-24,player.y+dy/l*dt*.19));player.walk++;}drawWorld();syncHud();requestAnimationFrame(loop)}
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup','arrowdown',' '].includes(k))e.preventDefault();keys.add(k);if(k==='e'||k==='enter')interact()});
+window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>keys.clear());
+document.querySelectorAll('.world-dpad button').forEach(b=>{const dir=b.dataset.dir,down=e=>{e.preventDefault();keys.add(({up:'w',down:'s',left:'a',right:'d'})[dir])},up=e=>{e.preventDefault();keys.delete(({up:'w',down:'s',left:'a',right:'d'})[dir])};b.addEventListener('pointerdown',down);b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('pointerleave',up)});
+$('worldInteract').addEventListener('click',interact);$('worldMapBtn').addEventListener('click',nearest);
+window.nexLifeWorldSync=syncHud;
+requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>
