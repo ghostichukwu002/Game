@@ -93,7 +93,7 @@ $('career').innerHTML='<div class="jobline"><div><strong>'+(s.job?'Retail assist
 const gs=[['💰','Save ₦500','Keep at least ₦500 in your wallet.',s.money>=500],['📈','Learn a skill','Reach skill level 20.',s.skill>=20],['❤️','Stay healthy','Keep health at 80 or above.',s.health>=80],['🏠','Find your own place','Save ₦1,000 to move into your own place.',s.home==='Your own room']];
 $('goals').innerHTML=gs.map((g,i)=>'<div class="jobline"><div><strong>'+g[0]+' '+g[1]+'</strong><small>'+g[2]+'</small></div><span class="pill" style="color:'+(g[3]?'var(--green)':'var(--muted)')+'">'+(g[3]?'DONE':'IN PROGRESS')+'</span></div>').join('');
 $('log').innerHTML=s.log.map(l=>'<div class="log-item"><span>'+l.icon+'</span><div>'+l.text+'</div></div>').join('');
-if(s.money>=500)s.goals.cash=true;if(s.skill>=20)s.goals.skill=true;if(s.health>=80)s.goals.healthy=true;if(s.home==='Your own room')s.goals.home=true;
+if(s.money>=500)s.goals.cash=true;if(s.skill>=20)s.goals.skill=true;if(s.health>=80)s.goals.healthy=true;if(s.home==='Your own room')s.goals.home=true;window.__nexLifeMoney=s.money;window.__nexLifeTime=8+((s.day-1)%5)*3;if(window.nexLifeWorldSync)window.nexLifeWorldSync();
 }
 function advance(){s.day++;if(s.day%30===0)s.age++;s.energy=clamp(s.energy-8);s.happy=clamp(s.happy-2);if(s.energy<15)s.health=clamp(s.health-5);if(s.day%3===0)triggerEvent();save();render()}
 function act(cost,fn){if(s.money<cost){show('Not enough cash','You need '+money(cost)+' for this. Try working first.',[['Got it',()=>hide()]]);return}fn();advance()}
