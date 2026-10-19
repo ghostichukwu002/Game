@@ -117,7 +117,7 @@ function hide(){$('overlay').classList.remove('show')}
 $('save').onclick=()=>{save();show('Progress saved','Your virtual life is saved on this device. Come back anytime.',[['Nice',hide]])};
 $('reset').onclick=()=>show('Start a new life?','This will erase the current local simulation save and start again at age 18 with ₦120.',[['Start over',()=>{s=fresh();save();hide();render()}],['Cancel',hide]]);
 $('export').onclick=()=>{const blob=new Blob([JSON.stringify(s,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='nexplay-life-save.json';a.click();URL.revokeObjectURL(url)};
-render();save();
+window.nexLifeAction=function(action){({work:work,study:study,eat:eat,rest:rest,shop:shop,fun:fun,exercise:exercise,freelance:freelance}[action]||function(){})();};render();save();
 })();
 </script>
 
