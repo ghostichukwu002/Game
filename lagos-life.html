@@ -13,6 +13,33 @@
 .city-map-wrap{position:fixed;z-index:20;inset:0;background:#08131c;display:none;flex-direction:column}.city-map-wrap.open{display:flex}.city-map-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;background:#091720;border-bottom:1px solid #ffffff20;z-index:2}.city-map-title{font:700 16px "Space Grotesk";margin-right:auto}.city-map-title small{display:block;color:#a9b8c4;font:10px "DM Sans";margin-top:3px}.city-pick{border:1px solid #ffffff30;background:#10232e;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:800}.city-pick.active{background:#c4f16b;color:#17210b;border-color:#c4f16b}.map-close{border:1px solid #ffffff35;background:#1b2a35;border-radius:10px;padding:9px 13px;font-weight:800}.city-map{flex:1;min-height:0;width:100%;background:#d7d8c9}.map-note{background:#091720;color:#a9b8c4;font-size:10px;padding:7px 12px;line-height:1.5}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#10212c;color:#f4f7fa}.leaflet-popup-content{font-family:"DM Sans";font-size:12px}.leaflet-popup-content b{font-size:13px}.leaflet-container a{color:#6ce9ff}.map-legend{position:absolute;z-index:500;bottom:38px;left:12px;background:#08131ce8;border:1px solid #ffffff30;border-radius:10px;color:#f4f7fa;padding:10px 12px;font-size:11px;max-width:260px}@media(max-width:650px){.city-map-head{gap:6px;padding:10px}.city-map-title{width:100%;font-size:14px}.city-pick,.map-close{padding:8px 9px;font-size:11px}.map-legend{bottom:42px;max-width:190px;font-size:10px}}
 .swatches{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 4px}.swatch{width:34px;height:34px;border-radius:10px;border:2px solid #ffffff30;cursor:pointer;padding:0}.swatch.on{border-color:#c4f16b;box-shadow:0 0 0 2px #c4f16b55}.wd-row{margin-top:14px}.wd-row b{font-size:11px;color:#a9b8c4;letter-spacing:.08em}.wd-btn{border:1px solid #526877;border-radius:11px;background:#1a303d;padding:9px 12px;font-weight:800;font-size:12px;color:inherit}
 .phone-wrap{position:fixed;inset:0;z-index:12;display:none;align-items:center;justify-content:center;padding:16px;background:#02070cc9;backdrop-filter:blur(8px)}.phone-wrap.open{display:flex}.phone{width:min(400px,100%);height:min(640px,86vh);background:#0e1d27;border:1px solid #425968;border-radius:26px;display:flex;flex-direction:column;overflow:hidden}.phone-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #ffffff1a;font:700 15px 'Space Grotesk'}.phone-head button{border:1px solid #526877;background:#1a303d;color:inherit;border-radius:9px;padding:6px 10px;font-weight:800;font-size:12px}.phone-body{flex:1;display:flex;min-height:0}.phone-list{width:38%;border-right:1px solid #ffffff1a;overflow:auto}.phone-list button{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;padding:10px;border-bottom:1px solid #ffffff10;font-size:12px}.phone-list button.on{background:#1a303d}.phone-list small{display:block;color:#a9b8c4;font-size:10px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.phone-thread{flex:1;display:flex;flex-direction:column;min-width:0}.phone-title{padding:10px 12px;font-size:12px;font-weight:700;border-bottom:1px solid #ffffff1a;color:#c5d2dc}.phone-msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}.bubble{max-width:84%;padding:8px 11px;border-radius:14px;font-size:12px;line-height:1.4;background:#1c2f3b;align-self:flex-start}.bubble.me{align-self:flex-end;background:#2c6e5a}.bubble b{display:block;font-size:10px;color:#6ce9ff;margin-bottom:2px}.phone-quick{display:flex;flex-wrap:wrap;gap:6px;padding:10px;border-top:1px solid #ffffff1a}.phone-quick button{border:1px solid #526877;background:#1a303d;color:inherit;border-radius:10px;padding:7px 9px;font-size:11px}
+/* Phone layout: keep the HUD, action buttons, modals and phone compact on small screens */
+@media(max-width:720px){
+.top-right{flex-wrap:wrap;justify-content:flex-end;gap:5px;max-width:60vw}
+.top-right .chip{font-size:9px;padding:7px 8px}
+.brand small{display:none}
+.mission{top:70px}
+.mission p{display:none}
+.right-actions{left:auto;right:10px;bottom:72px;flex-direction:row;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:calc(100vw - 20px)}
+.right-actions .action-btn{padding:8px 9px;font-size:10px}
+.modal-wrap{padding:12px}
+.modal{max-height:88vh;overflow:auto;padding:18px;border-radius:18px}
+.modal h2{font-size:22px}
+.modal-buttons button{flex:1 1 45%;font-size:11px;padding:9px 10px}
+.phone-wrap{padding:8px}
+.phone{height:90vh;border-radius:18px}
+.phone-list{width:36%}
+.phone-list button{font-size:11px;padding:8px}
+.phone-head{padding:10px 12px}
+.bubble{max-width:90%}
+.swatch{width:30px;height:30px}
+.wd-row p{font-size:12px}
+}
+@media(max-width:390px){
+.top-right{max-width:56vw}
+.right-actions .action-btn{font-size:9px;padding:7px 8px}
+.phone-quick button{font-size:10px;padding:6px 7px}
+}
 </style></head>
 <body>
 <div id="game" aria-label="3D Lagos life simulation"></div><div class="vignette"></div>
